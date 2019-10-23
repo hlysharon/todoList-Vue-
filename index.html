@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <section class="todoapp">
+        <header class="header">
+            <h1>todos</h1>
+            <input id="task" class="new-todo" placeholder="添加新任务" autofocus @keyup.enter="add" v-model.trim="newItem">
+        </header>
+        <section class="main">
+            <ul class="todo-list" id="todo-list">
+                <!-- li默认是未完成状态
+        li的类名如果设置为completed，则是完成状态 -->
+                <li :key='item.id' v-for='item in todos' :class="item.completed? 'completed':''">
+                    <div>
+                        <input class="toggle" type="checkbox" v-model='item.completed'>
+                        <label :class="">{{item.title}}</label>
+                        <button class="destroy" @click="deletee(item.id)"></button>
+                    </div>
+                    <input class="edit" value="Create a TodoMVC template">
+                </li>
+
+            </ul>
+        </section>
+        <!-- This footer should hidden by default and shown when there are todos -->
+        <footer class="footer">
+            <!-- This should be `0 items left` by default -->
+            <span class="todo-count"><strong>{{viewCount}}</strong> item left(未完成数量)</span>
+            <button class="clear-completed" @click="clear">Clear completed(清除所有已完成)</button>
+        </footer>
+    </section>
+    <script src="js/vue.js"></script>
+    <script>
+        new Vue({
+            el: ".todoapp",
+            data: {
+                todos: [{
+                    id: 1,
+                    title: '吃饭',
+                    completed: false
+                }, {
+                    id: 2,
+                    title: '睡觉',
+                    completed: false
+                }, {
+                    id: 3,
+                    title: '打豆豆',
+                    completed: true
+                }],
+                newItem: ''
+            },
+            methods: {
+                add: function() {
+                    var idCount = this.todos.length;
+                    idCount++;
+                    var obj = {
+                        id: idCount,
+                        title: this.newItem,
+                        completed: false
+                    }
+                    this.todos.push(obj);
+                    this.newItem = '';
+                },
+                deletee: function(id) {
+                    console.log(id);
+                    var index = this.todos.findIndex(item => item.id == id)
+                    this.todos.splice(index, 1)
+                },
+                clear: function() {
+                    this.todos = this.todos.filter(item => item.completed == false);
+                }
+            },
+            computed: {
+                viewCount: function() {
+                    return this.todos.filter(item => item.completed == false).length;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
